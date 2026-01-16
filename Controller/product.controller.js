@@ -25,6 +25,74 @@ exports.createProduct = async (req, res) => {
   }
 };
 
+
+// ================= UPDATE PRODUCT (ADMIN) =================
+exports.updateProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    logger.info("Update Product API called", productId);
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      logger.warn(`Product not found for update: ${productId}`);
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      data: updatedProduct,
+    });
+
+  } catch (error) {
+    logger.error("Error while updating product", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ================= DELETE PRODUCT (ADMIN) =================
+exports.deleteProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    logger.info("Delete Product API called", productId);
+
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    if (!deletedProduct) {
+      logger.warn(`Product not found for delete: ${productId}`);
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+
+  } catch (error) {
+    logger.error("Error while deleting product", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // GET ALL PRODUCTS (User)
 exports.getAllProducts = async (req, res) => {
   try {
