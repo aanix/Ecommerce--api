@@ -1,13 +1,25 @@
 const express = require("express");
 const router = express.Router();
 
-const { addToCart, getMyCart  } = require("../Controller/cart.controller");
+const {
+  addToCart,
+  getMyCart,
+  updateCartItem,
+  removeFromCart
+} = require("../Controller/cart.controller");
+
 const verifyJWT = require("../Middleware/verifyJWT");
 
-// ADD TO CART
+// ADD
 router.post("/add", verifyJWT, addToCart);
 
-// GET USER CART
+// GET
 router.get("/", verifyJWT, getMyCart);
+
+// UPDATE quantity
+router.put("/update", verifyJWT, updateCartItem);
+
+// DELETE item
+router.delete("/remove", verifyJWT, removeFromCart);
 
 module.exports = router;
